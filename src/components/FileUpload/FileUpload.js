@@ -1,9 +1,17 @@
 import { Button, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import React from "react";
+import uuid from "react-uuid";
 import "./FileUpload.css";
+import { useNavigate } from "react-router-dom";
 
 const FileUpload = ({ text, inputType }) => {
+  const history = useNavigate();
+  const createNewForm = () => {
+    const id = uuid();
+    history(`/form/${id}`);
+  };
+
   return (
     <>
       <div className="upload_btn">
@@ -34,6 +42,7 @@ const FileUpload = ({ text, inputType }) => {
           </Button>
         ) : (
           <Button
+            onClick={createNewForm}
             variant="contained"
             component="label"
             sx={{

@@ -3,8 +3,9 @@ import "./Header.css";
 import SearchIcon from "@mui/icons-material/Search";
 import AppsIcon from "@mui/icons-material/Apps";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Avatar, IconButton, Typography } from "@mui/material";
+import { Avatar, IconButton, Link, Typography } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import TempDrawer from "../Drawer/TempDrawer";
 
 const Header = () => {
@@ -20,7 +21,11 @@ const Header = () => {
         />
 
         <div className="info">
-          <Typography variant="h3">Form Builder</Typography>
+          <Link href="/" sx={{ textDecoration: "none", color: "#909090" }}>
+            <Typography href="/" variant="h3">
+              Form Builder
+            </Typography>
+          </Link>
         </div>
       </div>
 
@@ -32,6 +37,9 @@ const Header = () => {
       </div>
 
       <div className="header_right">
+        <IconButton>
+          <NotificationsIcon />
+        </IconButton>
         <IconButton>
           <AppsIcon />
         </IconButton>

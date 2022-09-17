@@ -53,9 +53,6 @@ const MainBody = () => {
                   width: "100%",
                   background: "#F5F5F5;",
                   textAlign: "center",
-                  "&:hover": {
-                    color: "#fff",
-                  },
                 }}
               >
                 <div className="doc_card_content">
@@ -64,7 +61,6 @@ const MainBody = () => {
                       sx={{
                         color: "#1E88E5",
                         fontSize: "3rem",
-                        "&:hover": { color: "#fff" },
                       }}
                     />
                   </div>
