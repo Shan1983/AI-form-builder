@@ -1,4 +1,4 @@
-import { Button, Divider, IconButton, Typography } from "@mui/material";
+import { Button, IconButton, Typography } from "@mui/material";
 import React from "react";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
@@ -15,8 +15,6 @@ const MainBody = () => {
       date: `0${i + 1}/09/2022`,
     };
   });
-
-  console.log(dummyData);
 
   return (
     <div className="main_body">
