@@ -1,10 +1,11 @@
 .footer {
-    position: absolute;
+    position: sticky;
     bottom: 0;
     height: 100%px;
     border-top: 1px solid #303030;
     width: 100%;
     display: flex;
+    background-color: #fff;
 }
 
 .footer_left {

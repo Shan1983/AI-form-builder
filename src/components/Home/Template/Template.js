@@ -37,20 +37,16 @@ const Template = () => {
             <Divider />
             <div className="card_info_body">
               <Typography variant="body1">
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius
-                  laborum quisquam soluta sapiente, cupiditate at sequi,
-                  voluptatem exercitationem totam aperiam dignissimos reiciendis
-                  magni voluptate vero nihil temporibus accusantium nobis est?
-                </p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius
+                laborum quisquam soluta sapiente, cupiditate at sequi,
+                voluptatem exercitationem totam aperiam dignissimos reiciendis
+                magni voluptate vero nihil temporibus accusantium nobis est?
               </Typography>
               <Typography variant="body1">
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius
-                  laborum quisquam soluta sapiente, cupiditate at sequi,
-                  voluptatem exercitationem totam aperiam dignissimos reiciendis
-                  magni voluptate vero nihil temporibus accusantium nobis est?
-                </p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius
+                laborum quisquam soluta sapiente, cupiditate at sequi,
+                voluptatem exercitationem totam aperiam dignissimos reiciendis
+                magni voluptate vero nihil temporibus accusantium nobis est?
               </Typography>
             </div>
           </div>
@@ -64,20 +60,16 @@ const Template = () => {
             <Divider />
             <div className="card_info_body">
               <Typography variant="body1">
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius
-                  laborum quisquam soluta sapiente, cupiditate at sequi,
-                  voluptatem exercitationem totam aperiam dignissimos reiciendis
-                  magni voluptate vero nihil temporibus accusantium nobis est?
-                </p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius
+                laborum quisquam soluta sapiente, cupiditate at sequi,
+                voluptatem exercitationem totam aperiam dignissimos reiciendis
+                magni voluptate vero nihil temporibus accusantium nobis est?
               </Typography>
               <Typography variant="body1">
-                <p>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius
-                  laborum quisquam soluta sapiente, cupiditate at sequi,
-                  voluptatem exercitationem totam aperiam dignissimos reiciendis
-                  magni voluptate vero nihil temporibus accusantium nobis est?
-                </p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius
+                laborum quisquam soluta sapiente, cupiditate at sequi,
+                voluptatem exercitationem totam aperiam dignissimos reiciendis
+                magni voluptate vero nihil temporibus accusantium nobis est?
               </Typography>
             </div>
           </div>

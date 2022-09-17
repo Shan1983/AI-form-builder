@@ -25,7 +25,7 @@
 .template_right {
     display: flex;
     width: 40vw;
-    justify-content: end;
+    justify-content: flex-end;
 }
 
 

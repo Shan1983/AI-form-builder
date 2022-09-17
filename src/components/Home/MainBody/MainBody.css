@@ -1,0 +1,100 @@
+/* .main_body {
+    background-color: #fff;
+    margin-left: 160px;
+    margin-right: 160px;
+}
+
+.main_body_top {
+    display: flex;
+    margin-top: 15px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+} */
+
+.main_body {
+    margin-top: 20px;
+    background-color: #fff;
+    padding-bottom: 40px;
+    padding-top: 7px;
+    height: 100%;
+    width: 100vw;
+}
+
+.main_body_top {
+    margin-top: 10px;
+    margin-left: 160px;
+    margin-right: 160px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.main_body_top_center {
+    display: flex;
+    align-content: center;
+}
+
+
+.main_body_right {
+    display: flex;
+    width: 60vw;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.main_body_docs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-top: 20px;
+    margin-left: 160px;
+    max-width: 80vw;
+}
+
+.doc_card {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 250px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    padding:20px;
+}
+
+.doc_card_content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    align-items: center;
+}
+
+.doc_file_logo {
+    margin-bottom: 20px;
+}
+
+.doc_content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.doc_content_left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 160px
+}
+
+.doc_content_right {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 200px
+}
+
+
+
