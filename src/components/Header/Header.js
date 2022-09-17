@@ -15,12 +15,12 @@ const Header = () => {
 
         <DashboardIcon
           className="logo"
+          color="primary"
           sx={{ width: "40px", height: "40px" }}
         />
 
         <div className="info">
           <Typography variant="h3">Form Builder</Typography>
-          <Typography variant="subtitle2">V0.3.4</Typography>
         </div>
       </div>
 

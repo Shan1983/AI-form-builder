@@ -1,0 +1,21 @@
+.footer {
+    position: absolute;
+    bottom: 0;
+    height: 40px;
+    border-top: 1px solid #303030;
+    width: 100%;
+    display: flex;
+}
+
+.footer_left {
+    flex-grow: 1;
+    justify-content: flex-start;
+    margin-left: 20px;
+}
+
+.footer_right {
+    margin-right: 20px;
+    justify-content: flex-end;
+}
+
+

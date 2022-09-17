@@ -1,0 +1,21 @@
+.upload_btn {
+    display: flex;
+    justify-content: center;
+    border: 1px dashed #cecece;
+    width: 20vw;
+    height: 20vh;
+}
+
+
+
+.btn {
+    display: flex;
+    align-content: center;
+    justify-items: center;
+}
+
+.upload_btn:hover {
+    border: 1px dashed #303030;
+}
+
+button:hover { color: #fff;}

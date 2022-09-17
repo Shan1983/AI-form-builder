@@ -33,7 +33,7 @@ const TempDrawer = () => {
             }}
           >
             <Typography variant="h4" gutterBottom={true}>
-              Options
+              Settings
             </Typography>
             <Divider />
 
