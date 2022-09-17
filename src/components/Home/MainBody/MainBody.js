@@ -10,7 +10,7 @@ import "./MainBody.css";
 const MainBody = () => {
   const dummyData = Array.from({ length: 10 }, (_, i) => {
     return {
-      title: `data #${i}`,
+      title: `form name #${i}`,
       icon: DashboardIcon,
       date: `0${i + 1}/09/2022`,
     };

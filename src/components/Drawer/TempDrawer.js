@@ -106,7 +106,7 @@ const TempDrawer = () => {
   return (
     <>
       <IconButton onClick={toggleDrawer("left", true)}>
-        <MenuIcon />
+        <MenuIcon fontSize="large" />
       </IconButton>
       <Drawer
         open={state["left"]}
