@@ -1,8 +1,12 @@
 html {
   font-family: Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: #fff;
 }
 
 body {
   margin: 0;
   padding: 0;
+  height: 100vh;
 }
+
+

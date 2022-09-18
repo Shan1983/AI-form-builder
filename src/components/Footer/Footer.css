@@ -6,7 +6,10 @@
     width: 100%;
     display: flex;
     background-color: #fff;
+    margin-top: 0px;
 }
+
+
 
 .footer_left {
     flex-grow: 1;

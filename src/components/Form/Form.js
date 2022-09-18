@@ -7,8 +7,10 @@ import Builder from "./Builder/Builder";
 const Form = () => {
   return (
     <div className="form">
-      <FormHeader />
-      <FormTabs />
+      <div className="container">
+        <FormHeader />
+        <FormTabs />
+      </div>
       <Builder />
     </div>
   );

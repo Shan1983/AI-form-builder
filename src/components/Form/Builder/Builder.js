@@ -17,6 +17,11 @@ import FcRightUp from "@mui/icons-material/ArrowUpward";
 import CloseIcon from "@mui/icons-material/Close";
 import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
 import FlareIcon from "@mui/icons-material/Flare";
+import WidgetsIcon from "@mui/icons-material/Widgets";
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+
 import {
   Accordion,
   AccordionDetails,
@@ -24,25 +29,43 @@ import {
   Button,
   FormControlLabel,
   IconButton,
+  InputLabel,
   MenuItem,
   Radio,
   Select,
   Switch,
+  TextField,
   Typography,
 } from "@mui/material";
+import slugify from "react-slugify";
 
 const Builder = () => {
   // dummy data
   const [formData, setFormData] = React.useState([
-    // {
-    //   elementText: "this is a text field test",
-    //   elementType: "textField",
-    //   open: true,
-    //   required: false,
-    // },
     {
-      elementText: "this is a radio test",
+      elementText: "This is a text field test",
+      elementType: "textField",
+      open: true,
+      required: false,
+    },
+    {
+      elementText: "This is a radio test",
+      disabled: false,
       elementType: "radio",
+      elementName: slugify("this is a radio test"),
+      options: [
+        { optionText: "option 1" },
+        { optionText: "option 2" },
+        { optionText: "option 3" },
+      ],
+      open: true,
+      required: true,
+    },
+    {
+      elementText: "This is a checkbox test",
+      disabled: false,
+      elementType: "checkbox",
+      elementName: slugify("this is a checkbox test"),
       options: [
         { optionText: "option 1" },
         { optionText: "option 2" },
@@ -65,38 +88,50 @@ const Builder = () => {
             id="panel1a-header"
             elevation={1}
             style={{ width: "100%" }}
+            className={d.elementType === "textField" ? "hide" : ""}
           >
             {d.open ? (
               <div className="saved_element">
-                <Typography
-                  style={{
-                    fontSize: "1rem",
-                    fontWeight: 400,
-                    letterSpacing: ".1px",
-                    lineHeight: "1.5rem",
-                    paddingBottom: "8px",
-                  }}
-                  variant="overline"
-                >
-                  {d.elementText}
-                </Typography>
+                {d.elementType !== "textField" ? (
+                  <Typography
+                    style={{
+                      fontSize: "1rem",
+                      fontWeight: 400,
+                      letterSpacing: ".1px",
+                      lineHeight: "1rem",
+                      paddingBottom: "8px",
+                      marginLeft: "10px",
+                    }}
+                    variant="h6"
+                  >
+                    {d.elementText}
+                  </Typography>
+                ) : (
+                  ""
+                )}
 
                 {d.options?.map((o, j) => (
                   <div key={j}>
                     <div style={{ display: "flex" }}>
                       <FormControlLabel
                         style={{ marginLeft: "5px", marginBottom: "5px" }}
-                        disabled
+                        disabled={d.disabled}
                         control={
                           <input
                             type={d.elementType}
                             color="primary"
                             style={{ marginLeft: "3px" }}
                             required={d.required}
+                            name={d.elementName}
                           />
                         }
                         label={
-                          <Typography variant="overline">
+                          <Typography
+                            variant="body1"
+                            style={{
+                              marginLeft: "10px",
+                            }}
+                          >
                             {d.options[j].optionText}
                           </Typography>
                         }
@@ -112,20 +147,32 @@ const Builder = () => {
 
           <div className="element_boxes">
             <AccordionDetails className="add_element">
-              <div className="add_element_top">
+              <div className="text_title_element">
                 <input
                   type="text"
                   className="element_title"
                   placeholder="Element title"
                   value={d.elementText}
                 />
-                <FlareIcon style={{ color: "#5F6368" }} />
-                <Select
+              </div>
+              <div className="add_element_top">
+                <IconButton>
+                  <AddAPhotoIcon style={{ color: "#5F6368" }} />
+                </IconButton>
+                {/* <Select
                   className="select"
                   style={{ color: "#5F6368", fontSize: "1.5rem" }}
+                  labelId="elements"
+                  label="Controls"
+                > */}
+                <TextField
+                  style={{ color: "#5F6368", fontSize: "1.5rem" }}
+                  className="select select_box"
+                  select
+                  label={d.elementType || `Form Controls`}
                 >
                   <MenuItem id="text" value="Text">
-                    <SubjectIcon style={{ marginRight: "10px" }} /> Paragraph
+                    <SubjectIcon style={{ marginRight: "10px" }} /> Textfield
                   </MenuItem>
                   <MenuItem id="checkbox" value="CheckBox">
                     <CheckBoxIcon
@@ -136,12 +183,14 @@ const Builder = () => {
                   </MenuItem>
                   <MenuItem id="radio" value="Radio">
                     <Radio
-                      style={{ marginRight: "10px", COLOR: "#70757A" }}
+                      className="element_control_radio"
+                      style={{ COLOR: "#70757A" }}
                       checked
                     />
-                    Multiple Select
+                    Radio
                   </MenuItem>
-                </Select>
+                  {/* </Select> */}
+                </TextField>
               </div>
               {d.options?.map((op, i) => (
                 <div className="add_element_body" key={i}>
@@ -149,22 +198,30 @@ const Builder = () => {
                     <input
                       type={d.elementType}
                       style={{ marginRight: "10px" }}
+                      disabled
                     />
                   ) : (
                     <ShortTextIcon style={{ marginRight: "10px" }} />
                   )}
-                  <div>
+                  <div className="text_input_text">
                     <input
                       type="text"
                       className="text_input"
-                      placeholder="Enter option"
+                      placeholder="Enter Option"
                       value={d.options?.optionText}
                     />
                   </div>
-                  <AddToPhotosIcon style={{ COLOR: "#70757A" }} />
-                  <IconButton aria-label="delete">
-                    <CloseIcon />
-                  </IconButton>
+                  <div className="text_input_controls">
+                    <IconButton>
+                      <AddIcon style={{ COLOR: "#70757A" }} />
+                    </IconButton>
+                    <IconButton>
+                      <AddAPhotoIcon style={{ COLOR: "#70757A" }} />
+                    </IconButton>
+                    <IconButton aria-label="delete">
+                      <CloseIcon />
+                    </IconButton>
+                  </div>
                 </div>
               ))}
 
@@ -203,9 +260,12 @@ const Builder = () => {
                             textTransform: "none",
                             color: "#4285f4",
                             fontSize: "1rem",
+                            position: "absolute",
+                            right: "40px",
                           }}
                         >
-                          Add
+                          <AddIcon />
+                          New Option
                         </Button>
                       </div>
                     }
@@ -225,7 +285,8 @@ const Builder = () => {
                       fontSize: "1rem",
                     }}
                   >
-                    <FcRightUp
+                    <WidgetsIcon
+                      fontSize="large"
                       style={{
                         padding: "2px",
                         marginRight: "8px",
