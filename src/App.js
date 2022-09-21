@@ -7,7 +7,7 @@ import Form from "./components/Form/Form";
 
 function App() {
   return (
-    <>
+    <div className="content">
       <Header />
       <Router>
         <Routes>
@@ -16,7 +16,7 @@ function App() {
         </Routes>
       </Router>
       <Footer />
-    </>
+    </div>
   );
 }
 

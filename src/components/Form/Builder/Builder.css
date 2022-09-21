@@ -91,10 +91,6 @@
     background-color: #f4f4f9;
 }
 
-.element_title::first-letter {
-    color: red !important;
-}
-
 .select {
     height: 60px;
     width: 230px;

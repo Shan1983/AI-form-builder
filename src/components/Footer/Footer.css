@@ -7,6 +7,7 @@
     display: flex;
     background-color: #fff;
     margin-top: 0px;
+    z-index: 999;
 }
 
 
