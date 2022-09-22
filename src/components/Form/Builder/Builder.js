@@ -39,50 +39,14 @@ import { Box } from "@mui/system";
 
 const Builder = () => {
   // dummy data
-  const [formData, setFormData] = React.useState([
+  let [formData, setFormData] = React.useState([
     {
       id: uuid(),
       elementText: "This is a text field test",
       elementType: "textField",
       open: true,
       required: false,
-    },
-    {
-      id: uuid(),
-      elementText: "This is a radio test",
-      disabled: false,
-      elementType: "radio",
-      elementName: slugify("this is a radio test"),
-      options: [
-        { optionText: "radio option 1" },
-        { optionText: "radio option 2" },
-        { optionText: "radio option 3" },
-      ],
-      open: true,
-      required: true,
-    },
-    {
-      id: uuid(),
-      elementText: "This is a checkbox test",
-      disabled: false,
-      elementType: "checkbox",
-      elementName: slugify("this is a checkbox test"),
-      options: [
-        { optionText: "checkbo option 1" },
-        { optionText: "checkbox option 2" },
-      ],
-      open: true,
-      required: true,
-    },
-    {
-      id: uuid(),
-      elementText: "This is a checkbox test",
-      disabled: false,
-      elementType: "checkbox",
-      elementName: slugify("this is a checkbox test"),
       options: [],
-      open: true,
-      required: true,
     },
   ]);
   const [newInputValue, setNewInputValue] = React.useState("");
@@ -97,9 +61,10 @@ const Builder = () => {
     transform: "translate(-50%, -50%)",
     width: 400,
     bgcolor: "background.paper",
-    border: "2px solid #fff",
+    border: "2px solid #000",
     boxShadow: 24,
-    color: "#fff",
+    color: "#000",
+    backgroundColor: "#fff",
     pt: 2,
     px: 4,
     pb: 3,
@@ -143,7 +108,8 @@ const Builder = () => {
     if (newInputValue !== "") {
       const option = [...formData];
       console.log(option[i]);
-      option[i].options.push({ optionText: newInputValue });
+      option[i].options?.push({ optionText: newInputValue });
+      console.log("options", option[i]);
       setFormData(option);
       setNewInputValue("");
     }
@@ -179,14 +145,9 @@ const Builder = () => {
         elementType: "textField",
         open: true,
         required: false,
+        options: [],
       },
     ]);
-
-  const handleCopyFormElementComplete = (i) => {
-    const el = [...formData];
-    el.push(el[i]);
-    setFormData(el);
-  };
 
   const ElementTypeButtonLogo = (i) => {
     const el = [...formData];
@@ -268,10 +229,9 @@ const Builder = () => {
             id="panel1a-header"
             elevation={1}
             style={{ width: "490px" }}
-            className={d.elementType === "textField" ? "hide" : ""}
           >
             {d.open ? (
-              <div className="saved_element">
+              <div className="saved_element" style={{ width: "100%" }}>
                 {d.elementType !== "textField" ? (
                   <Typography
                     style={{
@@ -287,7 +247,41 @@ const Builder = () => {
                     {d.elementText}
                   </Typography>
                 ) : (
-                  ""
+                  <div
+                    style={{
+                      display: "flex",
+                      marginTop: 20,
+                      marginLeft: 10,
+                      width: "500px",
+                      marginBottom: 10,
+                      height: "100%",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        flex: 1,
+                        marginBottom: 20,
+                      }}
+                    >
+                      <Typography
+                        style={{
+                          fontSize: "1rem",
+                          fontWeight: 390,
+                          letterSpacing: ".1px",
+                          lineHeight: "1rem",
+                          paddingBottom: "8px",
+                          marginLeft: "10px",
+                          marginTop: 5,
+                        }}
+                        variant="h6"
+                      >
+                        {d.elementText}:
+                      </Typography>
+                      <input type="text" className="textfield_input" />
+                    </div>
+                  </div>
                 )}
 
                 {d.options?.map((o, j) => (
@@ -325,11 +319,7 @@ const Builder = () => {
             )}
           </AccordionSummary>
 
-          <Divider
-            className={d.elementType === "textField" ? "hide" : ""}
-            light
-            style={{ textTransform: "capitalize" }}
-          >
+          <Divider light style={{ textTransform: "capitalize" }}>
             {d.elementType} options
           </Divider>
 
@@ -394,7 +384,7 @@ const Builder = () => {
                 </TextField>
               </div>
               {d.elementType !== "textField" &&
-                d.options.map((f, h) => (
+                d.options?.map((f, h) => (
                   <div className="add_element_body">
                     {d.elementText !== "textField" ? (
                       <input
@@ -511,24 +501,22 @@ const Builder = () => {
                       <h2 id="child-modal-title">This is a POC</h2>
                       <p id="child-modal-description">
                         This button would represent the advanced OB form
-                        options, however this is only a test
+                        options, however this is only a toy!
                       </p>
                       <Button onClick={handleClose}>Close Modal</Button>
                     </Box>
                   </Modal>
 
                   <div className="add_element_bottom">
-                    <IconButton aria-label="Copy">
-                      <FilterNoneIcon
-                        onClick={() => handleCopyFormElementComplete(x)}
-                      />
-                    </IconButton>
-                    <IconButton aria-label="delete">
+                    <IconButton
+                      aria-label="delete"
+                      style={{ marginRight: "10px" }}
+                    >
                       <BsTrash onClick={() => removeEntireElement(x)} />
                     </IconButton>
                     <Typography
                       variant="overline"
-                      style={{ color: "#5f6368", fontSize: "1rem" }}
+                      style={{ color: "#5f6368", fontSize: "0.8rem" }}
                     >
                       Required{" "}
                       <Switch
@@ -538,6 +526,22 @@ const Builder = () => {
                         onClick={() => handleRequiredSwitch(x)}
                       />
                     </Typography>
+                    {d.elementType !== "textField" ? (
+                      <Typography
+                        variant="overline"
+                        style={{ color: "#5f6368", fontSize: "0.8rem" }}
+                      >
+                        Buttons{" "}
+                        <Switch
+                          name="checkedA"
+                          color="primary"
+                          checked={d.required}
+                          onClick={() => handleRequiredSwitch(x)}
+                        />
+                      </Typography>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
               </div>
@@ -549,7 +553,7 @@ const Builder = () => {
 
   return (
     <div>
-      <div className="builder_form">
+      <div className="builder_form full">
         <br />
         <br />
         <div className="section">

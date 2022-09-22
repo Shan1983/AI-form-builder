@@ -4,6 +4,19 @@
     background-color: #f4f4f9;;
 }
 
+.full {
+    min-height: 100vh;
+}
+
+.textfield_input {
+height: 30px;
+    margin-left: 10px;
+    border-radius: 5px;
+    font-size: 1.5rem;
+    border: 0.5px solid #ccc
+}
+
+
 .section {
     margin: auto;
     width: 60%;
