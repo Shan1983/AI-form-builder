@@ -7,15 +7,26 @@ import DynamicFormIcon from "@mui/icons-material/DynamicForm";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Alert, Button, IconButton, Typography } from "@mui/material";
 import { ColorLensOutlined } from "@mui/icons-material";
+import { useStateValue } from "../../../Data/stateProvider";
 
 const FormHeader = () => {
   const [docName, setDocName] = React.useState();
   const [blink, setBlink] = React.useState(false);
   const [alert, setAlert] = React.useState(false);
 
+  const [state, dispatch] = useStateValue();
+
+  const handleTitleUpdate = (txt) => {
+    console.log(txt);
+    dispatch({ type: "SET_FORM_NAME", payload: txt });
+    console.log("formName", state.formName);
+  };
+
   const handleSave = () => {
     setTimeout(() => {
-      setBlink(!blink);
+      dispatch({ type: "SET_SAVED", payload: true });
+      setBlink(true);
+      dispatch({ type: "SET_SAVED_FORM_DATA", payload: state.form });
     }, 500);
     setTimeout(() => {
       setBlink(false);
@@ -23,6 +34,7 @@ const FormHeader = () => {
     }, 5000);
   };
 
+  console.log(state);
   return (
     <>
       {alert != true ? (
@@ -44,7 +56,8 @@ const FormHeader = () => {
             type="text"
             placeholder="Untitled Form"
             className="form_name"
-            value={docName}
+            value={state.formName}
+            onChange={(e) => handleTitleUpdate(e.target.value)}
           />
           <IoMdFolderOpen
             className="form_header_icon"

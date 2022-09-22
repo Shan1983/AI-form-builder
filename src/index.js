@@ -6,12 +6,16 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import { StateProvider } from "./Data/stateProvider";
+import reducer, { initialState } from "./Data/reducer";
 
 const root = document.getElementById("root");
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <StateProvider initialState={initialState} reducer={reducer}>
+      <App />
+    </StateProvider>
   </React.StrictMode>,
   root
 );

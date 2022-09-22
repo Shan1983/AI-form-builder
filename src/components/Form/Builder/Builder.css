@@ -179,6 +179,10 @@ input {
     display: none !important;
 }
 
+.green {
+    border-left: 6px solid green;
+}
+
 .add_element_bottom_left{
     margin-top: 12px;
     display: flex;

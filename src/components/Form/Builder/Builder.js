@@ -40,8 +40,18 @@ import uuid from "react-uuid";
 import { Box } from "@mui/system";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { PersonalVideoRounded } from "@mui/icons-material";
+import reducer, { initialState } from "../../../Data/reducer";
+import { useStateValue } from "../../../Data/stateProvider";
 
 const Builder = () => {
+  const [state, dispatch] = useStateValue();
+
+  // const handleTitleUpdate = (txt) => {
+
+  //   dispatch({ type: "SET_FORM_NAME", payload: txt });
+
+  // };
+
   // dummy data
   let [formData, setFormData] = React.useState([
     {
@@ -55,6 +65,8 @@ const Builder = () => {
   ]);
   const [newInputValue, setNewInputValue] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const [formTitle, setFormTitle] = React.useState("Untitled Form");
+  const [aboutForm, setAboutForm] = React.useState("");
 
   console.log(formData && formData?.map((d) => console.log(d.open)));
 
@@ -141,7 +153,7 @@ const Builder = () => {
     setFormData(el);
   };
 
-  const handleNewFormBuilderElement = () =>
+  const handleNewFormBuilderElement = () => {
     setFormData([
       ...formData,
       {
@@ -152,6 +164,7 @@ const Builder = () => {
         options: [],
       },
     ]);
+  };
 
   const ElementTypeButtonLogo = (i) => {
     const el = [...formData];
@@ -217,6 +230,15 @@ const Builder = () => {
     return result;
   };
 
+  const handleFormTitleUpdate = (txt) => {
+    dispatch({ type: "SET_FORM_NAME", payload: txt });
+    setFormTitle(txt);
+  };
+
+  const handleAboutFormUpdate = (txt) => {
+    dispatch({ type: "SET_FORM_DESC", payload: txt });
+  };
+
   const builderUI = () => {
     return (
       formData &&
@@ -244,7 +266,13 @@ const Builder = () => {
                   </div>
                   <Accordion
                     expanded={d.open}
-                    className={d.open ? "add_border" : "hide"}
+                    className={
+                      d.open && state.saved == false
+                        ? "add_border"
+                        : state.saved == true
+                        ? "green"
+                        : "hide"
+                    }
                   >
                     <div className="edit_b">
                       <div className="builder_edit" style={{ zIndex: 555 }}>
@@ -655,11 +683,15 @@ const Builder = () => {
                 className="builder_form_top_name"
                 style={{ color: "#000" }}
                 placeholder="Untitled Form"
+                value={state.formName}
+                onChange={(e) => handleFormTitleUpdate(e.target.value)}
               />
               <input
                 type="text"
                 className="builder_form_top_desc"
                 placeholder="Form Description"
+                value={state.formDesc}
+                onChange={(e) => handleAboutFormUpdate(e.target.value)}
               />
             </div>
           </div>
