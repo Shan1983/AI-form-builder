@@ -2,7 +2,6 @@ import React from "react";
 import "./Builder.css";
 
 // the billion icons this requires..
-import CropDinIcon from "@mui/icons-material/CropDin";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import ShortTextIcon from "@mui/icons-material/ShortText";
 import SubjectIcon from "@mui/icons-material/Subject";
@@ -10,84 +9,265 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import BsTrash from "@mui/icons-material/Delete";
 import FilterNoneIcon from "@mui/icons-material/FilterNone";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import OndemandVideoIcon from "@mui/icons-material/OndemandVideo";
 import TextFieldsIcon from "@mui/icons-material/TextFields";
-import { BsFileText } from "react-icons";
-import FcRightUp from "@mui/icons-material/ArrowUpward";
 import CloseIcon from "@mui/icons-material/Close";
-import AddToPhotosIcon from "@mui/icons-material/AddToPhotos";
-import FlareIcon from "@mui/icons-material/Flare";
-import WidgetsIcon from "@mui/icons-material/Widgets";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import SaveIcon from "@mui/icons-material/Save";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Button,
+  Divider,
   FormControlLabel,
   IconButton,
-  InputLabel,
   MenuItem,
+  Modal,
   Radio,
-  Select,
   Switch,
   TextField,
   Typography,
 } from "@mui/material";
 import slugify from "react-slugify";
+import uuid from "react-uuid";
+import { Box } from "@mui/system";
 
 const Builder = () => {
   // dummy data
   const [formData, setFormData] = React.useState([
     {
+      id: uuid(),
       elementText: "This is a text field test",
       elementType: "textField",
       open: true,
       required: false,
     },
     {
+      id: uuid(),
       elementText: "This is a radio test",
       disabled: false,
       elementType: "radio",
       elementName: slugify("this is a radio test"),
       options: [
-        { optionText: "option 1" },
-        { optionText: "option 2" },
-        { optionText: "option 3" },
+        { optionText: "radio option 1" },
+        { optionText: "radio option 2" },
+        { optionText: "radio option 3" },
       ],
       open: true,
       required: true,
     },
     {
+      id: uuid(),
       elementText: "This is a checkbox test",
       disabled: false,
       elementType: "checkbox",
       elementName: slugify("this is a checkbox test"),
       options: [
-        { optionText: "option 1" },
-        { optionText: "option 2" },
-        { optionText: "option 3" },
+        { optionText: "checkbo option 1" },
+        { optionText: "checkbox option 2" },
       ],
       open: true,
       required: true,
     },
+    {
+      id: uuid(),
+      elementText: "This is a checkbox test",
+      disabled: false,
+      elementType: "checkbox",
+      elementName: slugify("this is a checkbox test"),
+      options: [],
+      open: true,
+      required: true,
+    },
   ]);
+  const [newInputValue, setNewInputValue] = React.useState("");
+  const [open, setOpen] = React.useState(false);
 
   console.log(formData && formData?.map((d) => console.log(d.open)));
 
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "2px solid #fff",
+    boxShadow: 24,
+    color: "#fff",
+    pt: 2,
+    px: 4,
+    pb: 3,
+  };
+
+  const changeElementValue = (txt, i) => {
+    const values = [...formData];
+    values[i].elementText = txt;
+    setFormData(values);
+    console.log("new txt value:", values);
+  };
+
+  const addElementType = (i, type) => {
+    let el = [...formData];
+    console.log(type);
+    el[i].elementType = type;
+
+    setFormData(el);
+  };
+
+  const changeNewElementValue = (txt, i, j) => {
+    const text = [...formData];
+    text[i].options[j].optionText = txt;
+    setFormData(text);
+  };
+
+  const handleRemoveValue = (i, j) => {
+    const text = [...formData];
+    if (text[i].options.length > 1) {
+      text[i].options.splice(j, 1);
+      setFormData(text);
+    } else {
+      text[i].open = false;
+      setFormData(text);
+    }
+    setFormData(text);
+  };
+
+  const handleAddNewOption = (i) => {
+    console.log("clicked");
+    if (newInputValue !== "") {
+      const option = [...formData];
+      console.log(option[i]);
+      option[i].options.push({ optionText: newInputValue });
+      setFormData(option);
+      setNewInputValue("");
+    }
+  };
+
+  const handleNewInputValue = (txt) => {
+    setNewInputValue(txt);
+  };
+
+  const copyInputElement = (i, j) => {
+    const el = [...formData];
+    el[i].options.push({ optionText: el[i].options[j].optionText });
+    setFormData(el);
+  };
+
+  const removeEntireElement = (i) => {
+    const el = [...formData];
+    if (formData.length > 1) el.splice(i, 1);
+    setFormData(el);
+  };
+
+  const handleRequiredSwitch = (i) => {
+    const el = [...formData];
+    el[i].required = !el[i].required;
+    setFormData(el);
+  };
+
+  const handleNewFormBuilderElement = () =>
+    setFormData([
+      ...formData,
+      {
+        elementText: "This is an example text field",
+        elementType: "textField",
+        open: true,
+        required: false,
+      },
+    ]);
+
+  const handleCopyFormElementComplete = (i) => {
+    const el = [...formData];
+    el.push(el[i]);
+    setFormData(el);
+  };
+
+  const ElementTypeButtonLogo = (i) => {
+    const el = [...formData];
+    switch (el[i].elementType) {
+      case "textField":
+        return (
+          <TextFieldsIcon
+            className="edit"
+            style={{
+              padding: "5px",
+              border: "1px solid #000",
+              borderRadius: "3px",
+            }}
+          />
+        );
+      case "radio":
+        return (
+          <RadioButtonCheckedIcon
+            className="edit"
+            style={{
+              padding: "5px",
+              border: "1px solid #000",
+              borderRadius: "3px",
+            }}
+          />
+        );
+      case "checkbox":
+        return (
+          <CheckBoxIcon
+            className="edit"
+            style={{
+              padding: "5px",
+              border: "1px solid #000",
+              borderRadius: "3px",
+            }}
+          />
+        );
+    }
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const builderUI = () =>
     formData &&
-    formData.map((d) => (
+    formData.map((d, x) => (
       <>
-        <Accordion expanded={d.open} className={d.open ? "add_border" : ""}>
+        <Accordion expanded={d.open} className={d.open ? "add_border" : "hide"}>
+          <div className="edit_b">
+            <div className="builder_edit" style={{ zIndex: 555 }}>
+              <div className="edit_btn_top">
+                {ElementTypeButtonLogo(x)}
+                <IconButton>
+                  <AddCircleOutlineIcon
+                    onClick={handleNewFormBuilderElement}
+                    className="edit"
+                  />
+                </IconButton>
+              </div>
+              <div className="edit_bottom_btn">
+                <IconButton>
+                  <SaveIcon className="edit_bottom_btn_b" />
+                </IconButton>
+                <IconButton>
+                  <EditIcon className="edit_bottom_btn_b" />
+                </IconButton>
+                <IconButton>
+                  <MoreVertIcon className="edit_bottom_btn_b" />
+                </IconButton>
+              </div>
+            </div>
+          </div>
           <AccordionSummary
             aria-controls="panel1a-content"
             id="panel1a-header"
             elevation={1}
-            style={{ width: "100%" }}
+            style={{ width: "490px" }}
             className={d.elementType === "textField" ? "hide" : ""}
           >
             {d.open ? (
@@ -145,6 +325,14 @@ const Builder = () => {
             )}
           </AccordionSummary>
 
+          <Divider
+            className={d.elementType === "textField" ? "hide" : ""}
+            light
+            style={{ textTransform: "capitalize" }}
+          >
+            {d.elementType} options
+          </Divider>
+
           <div className="element_boxes">
             <AccordionDetails className="add_element">
               <div className="text_title_element">
@@ -153,6 +341,7 @@ const Builder = () => {
                   className="element_title"
                   placeholder="Element title"
                   value={d.elementText}
+                  onChange={(e) => changeElementValue(e.target.value, x)}
                 />
               </div>
               <div className="add_element_top">
@@ -171,17 +360,29 @@ const Builder = () => {
                   select
                   label={d.elementType || `Form Controls`}
                 >
-                  <MenuItem id="text" value="Text">
+                  <MenuItem
+                    onClick={() => addElementType(x, "textField")}
+                    id="text"
+                    value="Text"
+                  >
                     <SubjectIcon style={{ marginRight: "10px" }} /> Textfield
                   </MenuItem>
-                  <MenuItem id="checkbox" value="CheckBox">
+                  <MenuItem
+                    onClick={() => addElementType(x, "checkbox")}
+                    id="checkbox"
+                    value="CheckBox"
+                  >
                     <CheckBoxIcon
                       style={{ marginRight: "10px", COLOR: "#70757A" }}
                       checked
                     />
                     Select
                   </MenuItem>
-                  <MenuItem id="radio" value="Radio">
+                  <MenuItem
+                    onClick={() => addElementType(x, "radio")}
+                    id="radio"
+                    value="Radio"
+                  >
                     <Radio
                       className="element_control_radio"
                       style={{ COLOR: "#70757A" }}
@@ -192,84 +393,96 @@ const Builder = () => {
                   {/* </Select> */}
                 </TextField>
               </div>
-              {d.options?.map((op, i) => (
-                <div className="add_element_body" key={i}>
-                  {d.elementText !== "text" ? (
-                    <input
-                      type={d.elementType}
-                      style={{ marginRight: "10px" }}
-                      disabled
-                    />
-                  ) : (
-                    <ShortTextIcon style={{ marginRight: "10px" }} />
-                  )}
-                  <div className="text_input_text">
-                    <input
-                      type="text"
-                      className="text_input"
-                      placeholder="Enter Option"
-                      value={d.options?.optionText}
-                    />
-                  </div>
-                  <div className="text_input_controls">
-                    <IconButton>
-                      <AddIcon style={{ COLOR: "#70757A" }} />
-                    </IconButton>
-                    <IconButton>
-                      <AddAPhotoIcon style={{ COLOR: "#70757A" }} />
-                    </IconButton>
-                    <IconButton aria-label="delete">
-                      <CloseIcon />
-                    </IconButton>
-                  </div>
-                </div>
-              ))}
+              {d.elementType !== "textField" &&
+                d.options.map((f, h) => (
+                  <div className="add_element_body">
+                    {d.elementText !== "textField" ? (
+                      <input
+                        type={d.elementType}
+                        style={{ marginRight: "10px" }}
+                        disabled
+                      />
+                    ) : (
+                      <ShortTextIcon style={{ marginRight: "10px" }} />
+                    )}
 
-              {d.options?.length < 5 ? (
+                    <div className="text_input_text">
+                      <input
+                        type="text"
+                        className="text_input"
+                        placeholder="Add new element text"
+                        value={d.options[h].optionText}
+                        onChange={(e) =>
+                          changeNewElementValue(e.target.value, x, h)
+                        }
+                      />
+                    </div>
+                    <div className="text_input_controls">
+                      <IconButton>
+                        <ContentCopyIcon
+                          onClick={() => copyInputElement(x, h)}
+                          style={{ COLOR: "#70757A" }}
+                        />
+                      </IconButton>
+                      <IconButton
+                        onClick={() => handleRemoveValue(x, h)}
+                        aria-label="delete"
+                      >
+                        <CloseIcon />
+                      </IconButton>
+                    </div>
+                  </div>
+                ))}
+              {d.elementType !== "textField" ? (
                 <div className="add_element_body" style={{ marginLeft: "7px" }}>
-                  <FormControlLabel
-                    className="element_form_control"
-                    disabled
-                    control={
-                      d.elementType != "text" ? (
-                        <input
-                          type={d.elementType}
-                          color="primary"
-                          inputProps={{ "aria-label": "secondary checkbox" }}
-                          style={{ marginLeft: "10px", marginRight: "10px" }}
-                          disabled
-                        />
-                      ) : (
-                        <ShortTextIcon style={{ marginRight: "10px" }} />
-                      )
-                    }
-                    label={
-                      <div className="new_element_title">
-                        <input
-                          type="text"
-                          className="text_input"
-                          style={{
-                            fontSize: "1rem",
-                            width: "60px",
-                          }}
-                          placeholder="Add another"
-                        />
-                        <Button
-                          size="small"
-                          style={{
-                            textTransform: "none",
-                            color: "#4285f4",
-                            fontSize: "1rem",
-                            position: "absolute",
-                            right: "40px",
-                          }}
-                        >
-                          <AddIcon />
-                          New Option
-                        </Button>
-                      </div>
-                    }
-                  />
+                  <div>
+                    <FormControlLabel
+                      className="element_form_control"
+                      disabled
+                      control={
+                        d.elementType != "textField" ? (
+                          <input
+                            type={d.elementType}
+                            color="primary"
+                            inputProps={{ "aria-label": "secondary checkbox" }}
+                            style={{ marginLeft: "10px", marginRight: "10px" }}
+                            disabled
+                          />
+                        ) : (
+                          <ShortTextIcon style={{ marginRight: "10px" }} />
+                        )
+                      }
+                      label={
+                        <div className="new_element_title">
+                          <input
+                            type="text"
+                            className="text_input"
+                            style={{
+                              fontSize: "1rem",
+                            }}
+                            placeholder={`Enter text`}
+                            value={newInputValue}
+                            onChange={(e) =>
+                              handleNewInputValue(e.target.value)
+                            }
+                          />
+                        </div>
+                      }
+                    />
+                    <Button
+                      size="small"
+                      style={{
+                        textTransform: "none",
+                        color: "#4285f4",
+                        fontSize: "1rem",
+                        marginLeft: "10px",
+                      }}
+                      onClick={(e) => handleAddNewOption(x)}
+                    >
+                      <AddIcon />
+                      {`Add new ${d.elementType} option`}
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 ""
@@ -284,23 +497,34 @@ const Builder = () => {
                       color: "#4285f4",
                       fontSize: "1rem",
                     }}
+                    onClick={handleOpen}
                   >
-                    <WidgetsIcon
-                      fontSize="large"
-                      style={{
-                        padding: "2px",
-                        marginRight: "8px",
-                      }}
-                    />{" "}
-                    Configuration
+                    Advanced options
                   </Button>
+                  <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="child-modal-title"
+                    aria-describedby="child-modal-description"
+                  >
+                    <Box sx={{ ...style, width: 200 }}>
+                      <h2 id="child-modal-title">This is a POC</h2>
+                      <p id="child-modal-description">
+                        This button would represent the advanced OB form
+                        options, however this is only a test
+                      </p>
+                      <Button onClick={handleClose}>Close Modal</Button>
+                    </Box>
+                  </Modal>
 
                   <div className="add_element_bottom">
                     <IconButton aria-label="Copy">
-                      <FilterNoneIcon />
+                      <FilterNoneIcon
+                        onClick={() => handleCopyFormElementComplete(x)}
+                      />
                     </IconButton>
                     <IconButton aria-label="delete">
-                      <BsTrash />
+                      <BsTrash onClick={() => removeEntireElement(x)} />
                     </IconButton>
                     <Typography
                       variant="overline"
@@ -311,11 +535,9 @@ const Builder = () => {
                         name="checkedA"
                         color="primary"
                         checked={d.required}
+                        onClick={() => handleRequiredSwitch(x)}
                       />
                     </Typography>
-                    <IconButton aria-label="delete">
-                      <MoreVertIcon />
-                    </IconButton>
                   </div>
                 </div>
               </div>
@@ -347,6 +569,12 @@ const Builder = () => {
             </div>
           </div>
           {builderUI()}
+          <Button
+            onClick={handleNewFormBuilderElement}
+            className="add_more_elements_btn"
+          >
+            Add another element
+          </Button>
         </div>
       </div>
     </div>
