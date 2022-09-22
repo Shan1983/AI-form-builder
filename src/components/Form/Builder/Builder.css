@@ -8,12 +8,18 @@
     min-height: 100vh;
 }
 
+input {
+    outline: none;
+    border: none;
+}
+
 .textfield_input {
-height: 30px;
+    height: 30px;
     margin-left: 10px;
     border-radius: 5px;
     font-size: 1.5rem;
-    border: 0.5px solid #ccc
+    border: 0.5px solid #ccc;
+    width: 100%;
 }
 
 
@@ -139,7 +145,7 @@ height: 30px;
 .text_input_controls {
     display: flex;
     position: absolute;
-    right: 60px;
+    right: 12%;
 }
 
 .text_input_text {

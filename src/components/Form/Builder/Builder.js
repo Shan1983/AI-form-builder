@@ -17,6 +17,7 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import SaveIcon from "@mui/icons-material/Save";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 
 import {
   Accordion,
@@ -26,6 +27,7 @@ import {
   Divider,
   FormControlLabel,
   IconButton,
+  Input,
   MenuItem,
   Modal,
   Radio,
@@ -36,6 +38,8 @@ import {
 import slugify from "react-slugify";
 import uuid from "react-uuid";
 import { Box } from "@mui/system";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { PersonalVideoRounded } from "@mui/icons-material";
 
 const Builder = () => {
   // dummy data
@@ -195,361 +199,448 @@ const Builder = () => {
     setOpen(false);
   };
 
-  const builderUI = () =>
-    formData &&
-    formData.map((d, x) => (
-      <>
-        <Accordion expanded={d.open} className={d.open ? "add_border" : "hide"}>
-          <div className="edit_b">
-            <div className="builder_edit" style={{ zIndex: 555 }}>
-              <div className="edit_btn_top">
-                {ElementTypeButtonLogo(x)}
-                <IconButton>
-                  <AddCircleOutlineIcon
-                    onClick={handleNewFormBuilderElement}
-                    className="edit"
-                  />
-                </IconButton>
-              </div>
-              <div className="edit_bottom_btn">
-                <IconButton>
-                  <SaveIcon className="edit_bottom_btn_b" />
-                </IconButton>
-                <IconButton>
-                  <EditIcon className="edit_bottom_btn_b" />
-                </IconButton>
-                <IconButton>
-                  <MoreVertIcon className="edit_bottom_btn_b" />
-                </IconButton>
-              </div>
-            </div>
-          </div>
-          <AccordionSummary
-            aria-controls="panel1a-content"
-            id="panel1a-header"
-            elevation={1}
-            style={{ width: "490px" }}
-          >
-            {d.open ? (
-              <div className="saved_element" style={{ width: "100%" }}>
-                {d.elementType !== "textField" ? (
-                  <Typography
-                    style={{
-                      fontSize: "1rem",
-                      fontWeight: 400,
-                      letterSpacing: ".1px",
-                      lineHeight: "1rem",
-                      paddingBottom: "8px",
-                      marginLeft: "10px",
-                    }}
-                    variant="h6"
-                  >
-                    {d.elementText}
-                  </Typography>
-                ) : (
-                  <div
-                    style={{
-                      display: "flex",
-                      marginTop: 20,
-                      marginLeft: 10,
-                      width: "500px",
-                      marginBottom: 10,
-                      height: "100%",
-                    }}
-                  >
-                    <div
+  const onDragEnd = (result) => {
+    if (!result.destination) return;
+    const elements = [...formData];
+    const formEl = reorderElement(
+      elements,
+      result.source.index,
+      result.destination.index
+    );
+    setFormData(formEl);
+  };
+
+  const reorderElement = (elList, startIdx, endIdx) => {
+    const result = Array.from(elList);
+    const [removed] = result.splice(startIdx, 1);
+    result.splice(endIdx, 0, removed);
+    return result;
+  };
+
+  const builderUI = () => {
+    return (
+      formData &&
+      formData.map((d, x) => (
+        <Draggable key={x} draggableId={`id${x}`} index={x}>
+          {(provided, snapshot) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+            >
+              <div>
+                <div style={{ marginBottom: 0 }}>
+                  <div style={{ width: "100%", marginBottom: 0 }}>
+                    <DragIndicatorIcon
                       style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        flex: 1,
-                        marginBottom: 20,
+                        transform: "rotate(-90deg)",
+                        color: "#dae0e2",
+                        position: "relative",
+                        left: "50%",
+                        bottom: -10,
+                      }}
+                      fontSize="small"
+                    />
+                  </div>
+                  <Accordion
+                    expanded={d.open}
+                    className={d.open ? "add_border" : "hide"}
+                  >
+                    <div className="edit_b">
+                      <div className="builder_edit" style={{ zIndex: 555 }}>
+                        <div className="edit_btn_top">
+                          {ElementTypeButtonLogo(x)}
+                          <IconButton>
+                            <AddCircleOutlineIcon
+                              onClick={handleNewFormBuilderElement}
+                              className="edit"
+                            />
+                          </IconButton>
+                        </div>
+                        <div className="edit_bottom_btn">
+                          <IconButton>
+                            <SaveIcon className="edit_bottom_btn_b" />
+                          </IconButton>
+                          <IconButton>
+                            <EditIcon className="edit_bottom_btn_b" />
+                          </IconButton>
+                          <IconButton>
+                            <MoreVertIcon className="edit_bottom_btn_b" />
+                          </IconButton>
+                        </div>
+                      </div>
+                    </div>
+                    <AccordionSummary
+                      aria-controls="panel1a-content"
+                      id="panel1a-header"
+                      elevation={1}
+                      style={{
+                        width: "490px",
+                        background: "#fff",
+                        marginLeft: 10,
                       }}
                     >
-                      <Typography
-                        style={{
-                          fontSize: "1rem",
-                          fontWeight: 390,
-                          letterSpacing: ".1px",
-                          lineHeight: "1rem",
-                          paddingBottom: "8px",
-                          marginLeft: "10px",
-                          marginTop: 5,
-                        }}
-                        variant="h6"
-                      >
-                        {d.elementText}:
-                      </Typography>
-                      <input type="text" className="textfield_input" />
-                    </div>
-                  </div>
-                )}
+                      {d.open ? (
+                        <div
+                          className="saved_element"
+                          style={{ width: "100%", background: "#fff" }}
+                        >
+                          {d.elementType !== "textField" ? (
+                            <Typography
+                              style={{
+                                fontSize: "1rem",
+                                fontWeight: 400,
+                                letterSpacing: ".1px",
+                                lineHeight: "1rem",
+                                paddingBottom: "8px",
+                                marginLeft: "10px",
+                              }}
+                              variant="h6"
+                            >
+                              {d.elementText}
+                            </Typography>
+                          ) : (
+                            <div
+                              style={{
+                                display: "flex",
+                                marginTop: 20,
+                                marginLeft: 10,
+                                width: "500px",
+                                marginBottom: 10,
+                                height: "100%",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  flex: 1,
+                                  marginBottom: 20,
+                                }}
+                              >
+                                <Typography
+                                  style={{
+                                    fontSize: "1rem",
+                                    fontWeight: 390,
+                                    letterSpacing: ".1px",
+                                    lineHeight: "1rem",
+                                    paddingBottom: "8px",
+                                    marginLeft: "10px",
+                                    marginTop: 5,
+                                  }}
+                                  variant="h6"
+                                >
+                                  {d.elementText}:
+                                </Typography>
+                                <input
+                                  type="text"
+                                  className="textfield_input"
+                                  style={{ width: "100%" }}
+                                />
+                              </div>
+                            </div>
+                          )}
 
-                {d.options?.map((o, j) => (
-                  <div key={j}>
-                    <div style={{ display: "flex" }}>
-                      <FormControlLabel
-                        style={{ marginLeft: "5px", marginBottom: "5px" }}
-                        disabled={d.disabled}
-                        control={
-                          <input
-                            type={d.elementType}
-                            color="primary"
-                            style={{ marginLeft: "3px" }}
-                            required={d.required}
-                            name={d.elementName}
+                          {d.options?.map((o, j) => (
+                            <div key={j}>
+                              <div style={{ display: "flex" }}>
+                                <FormControlLabel
+                                  style={{
+                                    marginLeft: "5px",
+                                    marginBottom: "5px",
+                                  }}
+                                  disabled={d.disabled}
+                                  control={
+                                    <input
+                                      type={d.elementType}
+                                      color="primary"
+                                      style={{ marginLeft: "3px" }}
+                                      required={d.required}
+                                      name={d.elementName}
+                                    />
+                                  }
+                                  label={
+                                    <Typography
+                                      variant="body1"
+                                      style={{
+                                        marginLeft: "10px",
+                                      }}
+                                    >
+                                      {d.options[j].optionText}
+                                    </Typography>
+                                  }
+                                />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </AccordionSummary>
+
+                    <Divider light style={{ textTransform: "capitalize" }}>
+                      {d.elementType} options
+                    </Divider>
+
+                    <div className="element_boxes">
+                      <AccordionDetails className="add_element">
+                        <div className="text_title_element">
+                          <Input
+                            type="text"
+                            className="element_title"
+                            placeholder="Element title"
+                            value={d.elementText}
+                            onChange={(e) =>
+                              changeElementValue(e.target.value, x)
+                            }
                           />
-                        }
-                        label={
-                          <Typography
-                            variant="body1"
-                            style={{
-                              marginLeft: "10px",
-                            }}
-                          >
-                            {d.options[j].optionText}
-                          </Typography>
-                        }
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              ""
-            )}
-          </AccordionSummary>
-
-          <Divider light style={{ textTransform: "capitalize" }}>
-            {d.elementType} options
-          </Divider>
-
-          <div className="element_boxes">
-            <AccordionDetails className="add_element">
-              <div className="text_title_element">
-                <input
-                  type="text"
-                  className="element_title"
-                  placeholder="Element title"
-                  value={d.elementText}
-                  onChange={(e) => changeElementValue(e.target.value, x)}
-                />
-              </div>
-              <div className="add_element_top">
-                <IconButton>
-                  <AddAPhotoIcon style={{ color: "#5F6368" }} />
-                </IconButton>
-                {/* <Select
+                        </div>
+                        <div className="add_element_top">
+                          <IconButton>
+                            <AddAPhotoIcon style={{ color: "#5F6368" }} />
+                          </IconButton>
+                          {/* <Select
                   className="select"
                   style={{ color: "#5F6368", fontSize: "1.5rem" }}
                   labelId="elements"
                   label="Controls"
                 > */}
-                <TextField
-                  style={{ color: "#5F6368", fontSize: "1.5rem" }}
-                  className="select select_box"
-                  select
-                  label={d.elementType || `Form Controls`}
-                >
-                  <MenuItem
-                    onClick={() => addElementType(x, "textField")}
-                    id="text"
-                    value="Text"
-                  >
-                    <SubjectIcon style={{ marginRight: "10px" }} /> Textfield
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => addElementType(x, "checkbox")}
-                    id="checkbox"
-                    value="CheckBox"
-                  >
-                    <CheckBoxIcon
-                      style={{ marginRight: "10px", COLOR: "#70757A" }}
-                      checked
-                    />
-                    Select
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => addElementType(x, "radio")}
-                    id="radio"
-                    value="Radio"
-                  >
-                    <Radio
-                      className="element_control_radio"
-                      style={{ COLOR: "#70757A" }}
-                      checked
-                    />
-                    Radio
-                  </MenuItem>
-                  {/* </Select> */}
-                </TextField>
-              </div>
-              {d.elementType !== "textField" &&
-                d.options?.map((f, h) => (
-                  <div className="add_element_body">
-                    {d.elementText !== "textField" ? (
-                      <input
-                        type={d.elementType}
-                        style={{ marginRight: "10px" }}
-                        disabled
-                      />
-                    ) : (
-                      <ShortTextIcon style={{ marginRight: "10px" }} />
-                    )}
-
-                    <div className="text_input_text">
-                      <input
-                        type="text"
-                        className="text_input"
-                        placeholder="Add new element text"
-                        value={d.options[h].optionText}
-                        onChange={(e) =>
-                          changeNewElementValue(e.target.value, x, h)
-                        }
-                      />
-                    </div>
-                    <div className="text_input_controls">
-                      <IconButton>
-                        <ContentCopyIcon
-                          onClick={() => copyInputElement(x, h)}
-                          style={{ COLOR: "#70757A" }}
-                        />
-                      </IconButton>
-                      <IconButton
-                        onClick={() => handleRemoveValue(x, h)}
-                        aria-label="delete"
-                      >
-                        <CloseIcon />
-                      </IconButton>
-                    </div>
-                  </div>
-                ))}
-              {d.elementType !== "textField" ? (
-                <div className="add_element_body" style={{ marginLeft: "7px" }}>
-                  <div>
-                    <FormControlLabel
-                      className="element_form_control"
-                      disabled
-                      control={
-                        d.elementType != "textField" ? (
-                          <input
-                            type={d.elementType}
-                            color="primary"
-                            inputProps={{ "aria-label": "secondary checkbox" }}
-                            style={{ marginLeft: "10px", marginRight: "10px" }}
-                            disabled
-                          />
-                        ) : (
-                          <ShortTextIcon style={{ marginRight: "10px" }} />
-                        )
-                      }
-                      label={
-                        <div className="new_element_title">
-                          <input
-                            type="text"
-                            className="text_input"
-                            style={{
-                              fontSize: "1rem",
-                            }}
-                            placeholder={`Enter text`}
-                            value={newInputValue}
-                            onChange={(e) =>
-                              handleNewInputValue(e.target.value)
-                            }
-                          />
+                          <TextField
+                            style={{ color: "#5F6368", fontSize: "1.5rem" }}
+                            className="select select_box"
+                            select
+                            label={d.elementType || `Form Controls`}
+                          >
+                            <MenuItem
+                              onClick={() => addElementType(x, "textField")}
+                              id="text"
+                              value="Text"
+                            >
+                              <SubjectIcon style={{ marginRight: "10px" }} />{" "}
+                              Textfield
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => addElementType(x, "checkbox")}
+                              id="checkbox"
+                              value="CheckBox"
+                            >
+                              <CheckBoxIcon
+                                style={{
+                                  marginRight: "10px",
+                                  COLOR: "#70757A",
+                                }}
+                                checked
+                              />
+                              Select
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() => addElementType(x, "radio")}
+                              id="radio"
+                              value="Radio"
+                            >
+                              <Radio
+                                className="element_control_radio"
+                                style={{ COLOR: "#70757A" }}
+                                checked
+                              />
+                              Radio
+                            </MenuItem>
+                            {/* </Select> */}
+                          </TextField>
                         </div>
-                      }
-                    />
-                    <Button
-                      size="small"
-                      style={{
-                        textTransform: "none",
-                        color: "#4285f4",
-                        fontSize: "1rem",
-                        marginLeft: "10px",
-                      }}
-                      onClick={(e) => handleAddNewOption(x)}
-                    >
-                      <AddIcon />
-                      {`Add new ${d.elementType} option`}
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                ""
-              )}
+                        {d.elementType !== "textField" &&
+                          d.options?.map((f, h) => (
+                            <div className="add_element_body">
+                              {d.elementText !== "textField" ? (
+                                <input
+                                  type={d.elementType}
+                                  style={{ marginRight: "10px" }}
+                                  disabled
+                                />
+                              ) : (
+                                <ShortTextIcon
+                                  style={{ marginRight: "10px" }}
+                                />
+                              )}
 
-              <div className="add_footer">
-                <div className="add_element_bottom_left">
-                  <Button
-                    size="small"
-                    style={{
-                      textTransform: "none",
-                      color: "#4285f4",
-                      fontSize: "1rem",
-                    }}
-                    onClick={handleOpen}
-                  >
-                    Advanced options
-                  </Button>
-                  <Modal
-                    open={open}
-                    onClose={handleClose}
-                    aria-labelledby="child-modal-title"
-                    aria-describedby="child-modal-description"
-                  >
-                    <Box sx={{ ...style, width: 200 }}>
-                      <h2 id="child-modal-title">This is a POC</h2>
-                      <p id="child-modal-description">
-                        This button would represent the advanced OB form
-                        options, however this is only a toy!
-                      </p>
-                      <Button onClick={handleClose}>Close Modal</Button>
-                    </Box>
-                  </Modal>
+                              <div className="text_input_text">
+                                <Input
+                                  type="text"
+                                  className="text_input"
+                                  placeholder="Add new element text"
+                                  value={d.options[h].optionText}
+                                  onChange={(e) =>
+                                    changeNewElementValue(e.target.value, x, h)
+                                  }
+                                />
+                              </div>
+                              <div className="text_input_controls">
+                                <IconButton>
+                                  <ContentCopyIcon
+                                    onClick={() => copyInputElement(x, h)}
+                                    style={{ COLOR: "#70757A" }}
+                                  />
+                                </IconButton>
+                                <IconButton
+                                  onClick={() => handleRemoveValue(x, h)}
+                                  aria-label="delete"
+                                >
+                                  <CloseIcon />
+                                </IconButton>
+                              </div>
+                            </div>
+                          ))}
+                        {d.elementType !== "textField" ? (
+                          <div
+                            className="add_element_body"
+                            style={{ marginLeft: "7px" }}
+                          >
+                            <div>
+                              <FormControlLabel
+                                className="element_form_control"
+                                disabled
+                                control={
+                                  d.elementType != "textField" ? (
+                                    <input
+                                      type={d.elementType}
+                                      color="primary"
+                                      inputProps={{
+                                        "aria-label": "secondary checkbox",
+                                      }}
+                                      style={{
+                                        marginLeft: "10px",
+                                        marginRight: "10px",
+                                      }}
+                                      disabled
+                                    />
+                                  ) : (
+                                    <ShortTextIcon
+                                      style={{ marginRight: "10px" }}
+                                    />
+                                  )
+                                }
+                                label={
+                                  <div className="new_element_title">
+                                    <Input
+                                      type="text"
+                                      className="text_input"
+                                      style={{
+                                        fontSize: "1rem",
+                                      }}
+                                      placeholder={`Enter text`}
+                                      value={newInputValue}
+                                      onChange={(e) =>
+                                        handleNewInputValue(e.target.value)
+                                      }
+                                    />
+                                  </div>
+                                }
+                              />
+                              <Button
+                                size="small"
+                                style={{
+                                  textTransform: "none",
+                                  color: "#4285f4",
+                                  fontSize: "1rem",
+                                  marginLeft: "10px",
+                                }}
+                                onClick={(e) => handleAddNewOption(x)}
+                              >
+                                <AddIcon />
+                                {`Add new ${d.elementType} option`}
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          ""
+                        )}
 
-                  <div className="add_element_bottom">
-                    <IconButton
-                      aria-label="delete"
-                      style={{ marginRight: "10px" }}
-                    >
-                      <BsTrash onClick={() => removeEntireElement(x)} />
-                    </IconButton>
-                    <Typography
-                      variant="overline"
-                      style={{ color: "#5f6368", fontSize: "0.8rem" }}
-                    >
-                      Required{" "}
-                      <Switch
-                        name="checkedA"
-                        color="primary"
-                        checked={d.required}
-                        onClick={() => handleRequiredSwitch(x)}
-                      />
-                    </Typography>
-                    {d.elementType !== "textField" ? (
-                      <Typography
-                        variant="overline"
-                        style={{ color: "#5f6368", fontSize: "0.8rem" }}
-                      >
-                        Buttons{" "}
-                        <Switch
-                          name="checkedA"
-                          color="primary"
-                          checked={d.required}
-                          onClick={() => handleRequiredSwitch(x)}
-                        />
-                      </Typography>
-                    ) : (
-                      ""
-                    )}
-                  </div>
+                        <div className="add_footer">
+                          <div className="add_element_bottom_left">
+                            <Button
+                              size="small"
+                              style={{
+                                textTransform: "none",
+                                color: "#4285f4",
+                                fontSize: "1rem",
+                              }}
+                              onClick={handleOpen}
+                            >
+                              Advanced options
+                            </Button>
+                            <Modal
+                              open={open}
+                              onClose={handleClose}
+                              aria-labelledby="child-modal-title"
+                              aria-describedby="child-modal-description"
+                            >
+                              <Box sx={{ ...style, width: 200 }}>
+                                <h2 id="child-modal-title">This is a POC</h2>
+                                <p id="child-modal-description">
+                                  This button would represent the advanced OB
+                                  form options, however this is only a toy!
+                                </p>
+                                <Button onClick={handleClose}>
+                                  Close Modal
+                                </Button>
+                              </Box>
+                            </Modal>
+
+                            <div className="add_element_bottom">
+                              <IconButton
+                                aria-label="delete"
+                                style={{ marginRight: "10px" }}
+                              >
+                                <BsTrash
+                                  onClick={() => removeEntireElement(x)}
+                                />
+                              </IconButton>
+                              <Typography
+                                variant="overline"
+                                style={{ color: "#5f6368", fontSize: "0.8rem" }}
+                              >
+                                Required{" "}
+                                <Switch
+                                  name="checkedA"
+                                  color="primary"
+                                  checked={d.required}
+                                  onClick={() => handleRequiredSwitch(x)}
+                                />
+                              </Typography>
+                              {d.elementType !== "textField" ? (
+                                <Typography
+                                  variant="overline"
+                                  style={{
+                                    color: "#5f6368",
+                                    fontSize: "0.8rem",
+                                  }}
+                                >
+                                  Buttons{" "}
+                                  <Switch
+                                    name="checkedA"
+                                    color="primary"
+                                    checked={d.required}
+                                    onClick={() => handleRequiredSwitch(x)}
+                                  />
+                                </Typography>
+                              ) : (
+                                ""
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </AccordionDetails>
+                    </div>
+                  </Accordion>
                 </div>
               </div>
-            </AccordionDetails>
-          </div>
-        </Accordion>
-      </>
-    ));
+            </div>
+          )}
+        </Draggable>
+      ))
+    );
+  };
 
   return (
     <div>
@@ -572,13 +663,16 @@ const Builder = () => {
               />
             </div>
           </div>
-          {builderUI()}
-          <Button
-            onClick={handleNewFormBuilderElement}
-            className="add_more_elements_btn"
-          >
-            Add another element
-          </Button>
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId={uuid()}>
+              {(provided, snapshot) => (
+                <div {...provided.droppableProps} ref={provided.innerRef}>
+                  {builderUI()}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
         </div>
       </div>
     </div>
