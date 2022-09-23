@@ -56,7 +56,7 @@ const Builder = () => {
   let [formData, setFormData] = React.useState([
     {
       id: uuid(),
-      elementText: "This is a text field test",
+      elementText: "This is a text field test t",
       elementType: "textField",
       open: true,
       required: false,
@@ -67,8 +67,6 @@ const Builder = () => {
   const [open, setOpen] = React.useState(false);
   const [formTitle, setFormTitle] = React.useState("Untitled Form");
   const [aboutForm, setAboutForm] = React.useState("");
-
-  console.log(formData && formData?.map((d) => console.log(d.open)));
 
   const style = {
     position: "absolute",
@@ -87,14 +85,16 @@ const Builder = () => {
   };
 
   const changeElementValue = (txt, i) => {
-    const values = [...formData];
+    const values = [...state.form];
     values[i].elementText = txt;
     setFormData(values);
-    console.log("new txt value:", values);
+    dispatch({ type: "SET_UPDATE_FORM_ELEMENT_TEXT", payload: [i, txt] });
+    if (state.form[i].saved === true)
+      dispatch({ type: "SET_UNSAVED", payload: false });
   };
 
   const addElementType = (i, type) => {
-    let el = [...formData];
+    let el = [...state.form];
     console.log(type);
     el[i].elementType = type;
 
@@ -102,13 +102,13 @@ const Builder = () => {
   };
 
   const changeNewElementValue = (txt, i, j) => {
-    const text = [...formData];
+    const text = [...state.form];
     text[i].options[j].optionText = txt;
     setFormData(text);
   };
 
   const handleRemoveValue = (i, j) => {
-    const text = [...formData];
+    const text = [...state.form];
     if (text[i].options.length > 1) {
       text[i].options.splice(j, 1);
       setFormData(text);
@@ -122,7 +122,7 @@ const Builder = () => {
   const handleAddNewOption = (i) => {
     console.log("clicked");
     if (newInputValue !== "") {
-      const option = [...formData];
+      const option = [...state.form];
       console.log(option[i]);
       option[i].options?.push({ optionText: newInputValue });
       console.log("options", option[i]);
@@ -136,38 +136,44 @@ const Builder = () => {
   };
 
   const copyInputElement = (i, j) => {
-    const el = [...formData];
+    const el = [...state.form];
     el[i].options.push({ optionText: el[i].options[j].optionText });
     setFormData(el);
   };
 
   const removeEntireElement = (i) => {
-    const el = [...formData];
-    if (formData.length > 1) el.splice(i, 1);
-    setFormData(el);
+    const el = [...state.form];
+    if (state.form.length > 1) el.splice(i, 1);
+    dispatch({ type: "SET_DELETE", payload: el });
   };
 
   const handleRequiredSwitch = (i) => {
-    const el = [...formData];
+    const el = [...state.form];
     el[i].required = !el[i].required;
     setFormData(el);
   };
 
   const handleNewFormBuilderElement = () => {
-    setFormData([
-      ...formData,
-      {
-        elementText: "This is an example text field",
-        elementType: "textField",
-        open: true,
-        required: false,
-        options: [],
-      },
-    ]);
+    setFormData();
+    dispatch({
+      type: "SET_SAVED_FORM_DATA",
+      payload: [
+        ...state.form,
+        {
+          id: uuid(),
+          elementText: "This is a text field test",
+          elementType: "textField",
+          open: true,
+          required: false,
+          options: [],
+          saved: false,
+        },
+      ],
+    });
   };
 
   const ElementTypeButtonLogo = (i) => {
-    const el = [...formData];
+    const el = [...state.form];
     switch (el[i].elementType) {
       case "textField":
         return (
@@ -214,13 +220,13 @@ const Builder = () => {
 
   const onDragEnd = (result) => {
     if (!result.destination) return;
-    const elements = [...formData];
+    const elements = [...state.form];
     const formEl = reorderElement(
       elements,
       result.source.index,
       result.destination.index
     );
-    setFormData(formEl);
+    setFormData(state.form);
   };
 
   const reorderElement = (elList, startIdx, endIdx) => {
@@ -239,10 +245,16 @@ const Builder = () => {
     dispatch({ type: "SET_FORM_DESC", payload: txt });
   };
 
+  const handleSingleFormElementSave = () => {
+    dispatch({ type: "SET_SAVED", payload: true });
+
+    dispatch({ type: "SET_SAVED_FORM_DATA", payload: state.form });
+  };
+
   const builderUI = () => {
     return (
-      formData &&
-      formData.map((d, x) => (
+      state.form &&
+      state.form.map((d, x) => (
         <Draggable key={x} draggableId={`id${x}`} index={x}>
           {(provided, snapshot) => (
             <div
@@ -267,9 +279,9 @@ const Builder = () => {
                   <Accordion
                     expanded={d.open}
                     className={
-                      d.open && state.saved == false
+                      d.open && d.saved == false
                         ? "add_border"
-                        : state.saved == true
+                        : d.saved == true
                         ? "green"
                         : "hide"
                     }
@@ -286,7 +298,9 @@ const Builder = () => {
                           </IconButton>
                         </div>
                         <div className="edit_bottom_btn">
-                          <IconButton>
+                          <IconButton
+                            onClick={() => handleSingleFormElementSave()}
+                          >
                             <SaveIcon className="edit_bottom_btn_b" />
                           </IconButton>
                           <IconButton>
@@ -418,7 +432,7 @@ const Builder = () => {
                             type="text"
                             className="element_title"
                             placeholder="Element title"
-                            value={d.elementText}
+                            value={state.form[x].elementText}
                             onChange={(e) =>
                               changeElementValue(e.target.value, x)
                             }
@@ -619,10 +633,9 @@ const Builder = () => {
                               <IconButton
                                 aria-label="delete"
                                 style={{ marginRight: "10px" }}
+                                onClick={() => removeEntireElement(x)}
                               >
-                                <BsTrash
-                                  onClick={() => removeEntireElement(x)}
-                                />
+                                <BsTrash />
                               </IconButton>
                               <Typography
                                 variant="overline"
