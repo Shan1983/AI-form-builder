@@ -264,18 +264,22 @@ const Builder = () => {
             >
               <div>
                 <div style={{ marginBottom: 0 }}>
-                  <div style={{ width: "100%", marginBottom: 0 }}>
-                    <DragIndicatorIcon
-                      style={{
-                        transform: "rotate(-90deg)",
-                        color: "#dae0e2",
-                        position: "relative",
-                        left: "50%",
-                        bottom: -10,
-                      }}
-                      fontSize="small"
-                    />
-                  </div>
+                  {d.open == true ? (
+                    <div style={{ width: "100%", marginBottom: 0 }}>
+                      <DragIndicatorIcon
+                        style={{
+                          transform: "rotate(-90deg)",
+                          color: "#dae0e2",
+                          position: "relative",
+                          left: "50%",
+                          bottom: -10,
+                        }}
+                        fontSize="small"
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
                   <Accordion
                     expanded={d.open}
                     className={
@@ -621,11 +625,11 @@ const Builder = () => {
                                 <h2 id="child-modal-title">This is a POC</h2>
                                 <p id="child-modal-description">
                                   This button would represent the advanced OB
-                                  form options, however this is only a toy!
+                                  form options, such as validation, and logic
+                                  expressions. However this is only a proof of
+                                  concept!
                                 </p>
-                                <Button onClick={handleClose}>
-                                  Close Modal
-                                </Button>
+                                <Button onClick={handleClose}>Close</Button>
                               </Box>
                             </Modal>
 
