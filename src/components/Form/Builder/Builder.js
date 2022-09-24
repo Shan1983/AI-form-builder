@@ -7,7 +7,6 @@ import ShortTextIcon from "@mui/icons-material/ShortText";
 import SubjectIcon from "@mui/icons-material/Subject";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import BsTrash from "@mui/icons-material/Delete";
-import FilterNoneIcon from "@mui/icons-material/FilterNone";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import TextFieldsIcon from "@mui/icons-material/TextFields";
 import CloseIcon from "@mui/icons-material/Close";
@@ -35,12 +34,9 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import slugify from "react-slugify";
 import uuid from "react-uuid";
 import { Box } from "@mui/system";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { PersonalVideoRounded } from "@mui/icons-material";
-import reducer, { initialState } from "../../../Data/reducer";
 import { useStateValue } from "../../../Data/stateProvider";
 
 const Builder = () => {
@@ -66,7 +62,6 @@ const Builder = () => {
   const [newInputValue, setNewInputValue] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [formTitle, setFormTitle] = React.useState("Untitled Form");
-  const [aboutForm, setAboutForm] = React.useState("");
 
   const style = {
     position: "absolute",
@@ -94,41 +89,22 @@ const Builder = () => {
   };
 
   const addElementType = (i, type) => {
-    let el = [...state.form];
-    console.log(type);
-    el[i].elementType = type;
-
-    setFormData(el);
+    dispatch({ type: "SET_ELEMENT_TYPE", payload: [i, type] });
   };
 
   const changeNewElementValue = (txt, i, j) => {
-    const text = [...state.form];
-    text[i].options[j].optionText = txt;
-    setFormData(text);
+    dispatch({ type: "SET_CHANGE_NEW_ELEMENT_VALUE", payload: [i, j, txt] });
   };
 
   const handleRemoveValue = (i, j) => {
-    const text = [...state.form];
-    if (text[i].options.length > 1) {
-      text[i].options.splice(j, 1);
-      setFormData(text);
-    } else {
-      text[i].open = false;
-      setFormData(text);
-    }
-    setFormData(text);
+    dispatch({ type: "SET_REMOVE_ELEMENT_VALUE", payload: [i, j] });
   };
 
   const handleAddNewOption = (i) => {
-    console.log("clicked");
-    if (newInputValue !== "") {
-      const option = [...state.form];
-      console.log(option[i]);
-      option[i].options?.push({ optionText: newInputValue });
-      console.log("options", option[i]);
-      setFormData(option);
-      setNewInputValue("");
-    }
+    const value = newInputValue;
+    console.log("value", newInputValue);
+    dispatch({ type: "SET_ADD_NEW_OPTION_BTN", payload: [i, value] });
+    setNewInputValue("");
   };
 
   const handleNewInputValue = (txt) => {
@@ -136,9 +112,7 @@ const Builder = () => {
   };
 
   const copyInputElement = (i, j) => {
-    const el = [...state.form];
-    el[i].options.push({ optionText: el[i].options[j].optionText });
-    setFormData(el);
+    dispatch({ type: "SET_NEW_COPY_ELEMENT", payload: [i, j] });
   };
 
   const removeEntireElement = (i) => {
@@ -148,13 +122,10 @@ const Builder = () => {
   };
 
   const handleRequiredSwitch = (i) => {
-    const el = [...state.form];
-    el[i].required = !el[i].required;
-    setFormData(el);
+    dispatch({ type: "SET_REQUIRED_SWITCH", payload: i });
   };
 
   const handleNewFormBuilderElement = () => {
-    setFormData();
     dispatch({
       type: "SET_SAVED_FORM_DATA",
       payload: [
@@ -497,7 +468,7 @@ const Builder = () => {
                         </div>
                         {d.elementType !== "textField" &&
                           d.options?.map((f, h) => (
-                            <div className="add_element_body">
+                            <div key={`id${h}`} className="add_element_body">
                               {d.elementText !== "textField" ? (
                                 <input
                                   type={d.elementType}
@@ -574,6 +545,7 @@ const Builder = () => {
                                       style={{
                                         fontSize: "1rem",
                                       }}
+                                      key={`id${x}`}
                                       placeholder={`Enter text`}
                                       value={newInputValue}
                                       onChange={(e) =>
@@ -649,7 +621,7 @@ const Builder = () => {
                                 <Switch
                                   name="checkedA"
                                   color="primary"
-                                  checked={d.required}
+                                  checked={state.form[x].required}
                                   onClick={() => handleRequiredSwitch(x)}
                                 />
                               </Typography>
