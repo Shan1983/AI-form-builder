@@ -80,12 +80,9 @@ const Builder = () => {
   };
 
   const changeElementValue = (txt, i) => {
-    const values = [...state.form];
-    values[i].elementText = txt;
-    setFormData(values);
     dispatch({ type: "SET_UPDATE_FORM_ELEMENT_TEXT", payload: [i, txt] });
     if (state.form[i].saved === true)
-      dispatch({ type: "SET_UNSAVED", payload: false });
+      dispatch({ type: "SET_UNSAVED", payload: [i, false] });
   };
 
   const addElementType = (i, type) => {
@@ -107,8 +104,10 @@ const Builder = () => {
     setNewInputValue("");
   };
 
-  const handleNewInputValue = (txt) => {
+  const handleNewInputValue = (i, txt) => {
     setNewInputValue(txt);
+    if (state.form[i].saved === true)
+      dispatch({ type: "SET_UNSAVED", payload: [i, false] });
   };
 
   const copyInputElement = (i, j) => {
@@ -549,7 +548,7 @@ const Builder = () => {
                                       placeholder={`Enter text`}
                                       value={newInputValue}
                                       onChange={(e) =>
-                                        handleNewInputValue(e.target.value)
+                                        handleNewInputValue(x, e.target.value)
                                       }
                                     />
                                   </div>

@@ -48,12 +48,12 @@ const reducer = (state = initialState, action) => {
       return { ...state, form: setSaved };
     case actionTypes.SET_UNSAVED:
       // this needs to be updated!!
-      return { ...state, form: action.payload };
+      const unsaved = [...state.form];
+      unsaved[action.payload[0]].saved = action.payload[1];
+      return { ...state, form: unsaved };
     case actionTypes.SET_UPDATE_FORM_ELEMENT_TEXT:
-      console.log("SET_UPDATE_FORM_ELEMENT_TEXT", action.payload);
       const values = [...state.form];
       values[action.payload[0]].elementText = action.payload[1];
-      console.log("values", action.payload[1]);
       return { ...state, form: values };
     case actionTypes.SET_SAVED_FORM_DATA:
       return { ...state, form: action.payload };
