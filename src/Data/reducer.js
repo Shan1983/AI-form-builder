@@ -16,6 +16,7 @@ export const initialState = {
   formName: "Untitled Form",
   formDesc: "",
   saved: false,
+  href: "",
 };
 
 export const actionTypes = {
@@ -47,7 +48,6 @@ const reducer = (state = initialState, action) => {
       const setSaved = state.form.map((f) => (f.saved = true));
       return { ...state, form: setSaved };
     case actionTypes.SET_UNSAVED:
-      // this needs to be updated!!
       const unsaved = [...state.form];
       unsaved[action.payload[0]].saved = action.payload[1];
       return { ...state, form: unsaved };

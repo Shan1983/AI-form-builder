@@ -38,15 +38,14 @@ import uuid from "react-uuid";
 import { Box } from "@mui/system";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useStateValue } from "../../../Data/stateProvider";
+import {
+  getLocalStorage,
+  saveLocalStorage,
+} from "../../../Helpers/localstorage";
+import { useParams } from "react-router-dom";
 
 const Builder = () => {
   const [state, dispatch] = useStateValue();
-
-  // const handleTitleUpdate = (txt) => {
-
-  //   dispatch({ type: "SET_FORM_NAME", payload: txt });
-
-  // };
 
   // dummy data
   let [formData, setFormData] = React.useState([
@@ -62,6 +61,21 @@ const Builder = () => {
   const [newInputValue, setNewInputValue] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [formTitle, setFormTitle] = React.useState("Untitled Form");
+
+  const { id } = useParams();
+
+  React.useEffect(() => {
+    // get saved forms
+    const forms = getLocalStorage("forms");
+    console.log("forms", forms);
+    // if theres a saved form filter via id against url
+    if (forms.form.length > 0) {
+      const { form } = Object.fromEntries(Object.entries(forms));
+      const data = form.filter((f) => f.id === id);
+      setFormData(data);
+    }
+    // set the form data state
+  }, []);
 
   const style = {
     position: "absolute",
@@ -208,7 +222,7 @@ const Builder = () => {
 
   const handleFormTitleUpdate = (txt) => {
     dispatch({ type: "SET_FORM_NAME", payload: txt });
-    setFormTitle(txt);
+    // setFormTitle(txt);
   };
 
   const handleAboutFormUpdate = (txt) => {
@@ -217,8 +231,8 @@ const Builder = () => {
 
   const handleSingleFormElementSave = () => {
     dispatch({ type: "SET_SAVED", payload: true });
-
     dispatch({ type: "SET_SAVED_FORM_DATA", payload: state.form });
+    saveLocalStorage(state);
   };
 
   const builderUI = () => {

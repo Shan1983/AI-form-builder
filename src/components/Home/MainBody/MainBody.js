@@ -6,18 +6,24 @@ import StorageIcon from "@mui/icons-material/Storage";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import "./MainBody.css";
+import { Link } from "react-router-dom";
+import uuid from "react-uuid";
+import AddIcon from "@mui/icons-material/Add";
 
 const MainBody = () => {
-  const dummyData = Array.from({ length: 10 }, (_, i) => {
-    return {
-      title: `form name #${i}`,
-      icon: DashboardIcon,
-      date: `0${i + 1}/09/2022`,
-    };
-  });
+  const [formData, setFormData] = React.useState([]);
+
+  React.useEffect(() => {
+    const data = window.localStorage.getItem("forms");
+    if (data) {
+      setFormData([JSON.parse(data)]);
+    } else {
+      setFormData([]);
+    }
+  }, []);
 
   return (
-    <div className="main_body">
+    <div className="main_body" style={{ height: "100vh" }}>
       <div className="main_body_top">
         <div
           className="main_body_top_left"
@@ -42,12 +48,36 @@ const MainBody = () => {
         </div>
       </div>
       <div className="main_body_docs">
-        {dummyData &&
-          dummyData.map((d) => (
-            <div key={d.title} className="doc_card">
+        <div className="doc_card">
+          <Button
+            component={Link}
+            to={`/form/${uuid()}`}
+            variant="contained"
+            sx={{
+              color: "#000",
+              width: "100%",
+              background: "#F5F5F5;",
+              textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <AddIcon
+              style={{
+                fontSize: "5rem",
+                color: "#1E88E5",
+                height: "100%",
+              }}
+            />
+          </Button>
+        </div>
+        {formData &&
+          formData.map((d, i) => (
+            <div key={d.formName} className="doc_card">
               <Button
+                component={Link}
+                to={`/form/${d.form[i].id}`}
                 variant="contained"
-                component="label"
                 sx={{
                   color: "#000",
                   width: "100%",
@@ -64,10 +94,8 @@ const MainBody = () => {
                       }}
                     />
                   </div>
-                  <Typography variant="subtitle1">{d.title}</Typography>
-                  <Typography variant="caption">
-                    Last updated: {d.date}
-                  </Typography>
+                  <Typography variant="subtitle1">{d.formName}</Typography>
+                  <Typography variant="caption">Id: {d.form[i].id}</Typography>
                   <div
                     className="doc_content"
                     style={{ fontSize: "1rem", color: "grey" }}

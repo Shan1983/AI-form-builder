@@ -8,6 +8,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Alert, Button, IconButton, Typography } from "@mui/material";
 import { ColorLensOutlined } from "@mui/icons-material";
 import { useStateValue } from "../../../Data/stateProvider";
+import { saveLocalStorage } from "../../../Helpers/localstorage";
 
 const FormHeader = () => {
   const [docName, setDocName] = React.useState();
@@ -27,6 +28,7 @@ const FormHeader = () => {
       dispatch({ type: "SET_SAVED", payload: true });
       setBlink(true);
       dispatch({ type: "SET_SAVED_FORM_DATA", payload: state.form });
+      saveLocalStorage(state);
     }, 500);
     setTimeout(() => {
       setBlink(false);

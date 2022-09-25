@@ -55,9 +55,9 @@
 
 .doc_card {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     box-sizing: border-box;
-    width: 250px;
+    width: 200px;
     margin-right: 20px;
     margin-bottom: 20px;
     padding:20px;
